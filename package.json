@@ -1,5 +1,19 @@
 {
+  "name": "covid-slayer",
+  "version": "1.0.0",
+  "description": "Battle COVID-19",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
   "dependencies": {
     "mongoose": "^8.17.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
