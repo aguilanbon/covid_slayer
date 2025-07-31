@@ -52,4 +52,17 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export default { createUser, getUsers, loginUser };
+export const verifyToken = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send({ message: "Token valid", user });
+  } catch (error) {
+    console.error("Token verification error:", error);
+    res.status(500).send({ message: "Error verifying token" });
+  }
+};
+
+export default { createUser, getUsers, loginUser, verifyToken };
