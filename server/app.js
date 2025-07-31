@@ -4,11 +4,14 @@ import connectDB from "./config/db.js";
 import userRouter from "./routes/user.routes.js";
 import cors from "cors";
 
+import gameRouter from "./routes/game.routes.js";
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use("/api", userRouter);
+app.use("/api", gameRouter);
 
 connectDB().then(() => {
   app.listen(process.env.PORT, () => {
