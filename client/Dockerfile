@@ -11,8 +11,11 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
+# Clean any existing installations and install fresh
+RUN rm -rf node_modules package-lock.json || true
+
 # Install ALL dependencies including optional ones (this is key for Rollup)
-RUN npm install --include=optional --legacy-peer-deps
+RUN npm install --include=optional --legacy-peer-deps --no-audit
 
 # Copy source code
 COPY . .
