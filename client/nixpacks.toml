@@ -3,7 +3,8 @@ NODE_VERSION = "20"
 
 [phases.install]
 cmds = [
-  "npm install --legacy-peer-deps --no-audit"
+  "rm -rf node_modules package-lock.json || true",
+  "npm install --include=optional --legacy-peer-deps --no-audit"
 ]
 
 [phases.build]

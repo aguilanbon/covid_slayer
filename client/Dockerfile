@@ -1,5 +1,5 @@
-# Use Node.js 20 official image
-FROM node:20-alpine AS builder
+# Use Node.js 20 with full build tools for better compatibility
+FROM node:20 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,11 +8,15 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Install dependencies with clean slate
-RUN npm install --legacy-peer-deps --no-audit --prefer-offline
+# Install dependencies with proper handling of optional dependencies
+RUN npm ci --include=optional --legacy-peer-deps --no-audit
 
 # Copy source code
 COPY . .
+
+# Clean install to ensure proper dependencies
+RUN rm -rf node_modules package-lock.json
+RUN npm install --include=optional --legacy-peer-deps --no-audit
 
 # Build the application
 RUN npm run build
