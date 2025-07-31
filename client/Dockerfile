@@ -1,5 +1,8 @@
-# Use Node.js 20 with full build tools for better compatibility
-FROM node:20 AS builder
+# Build stage - use full Node.js for better compatibility with native modules
+FROM node:20-bullseye-slim AS builder
+
+# Install essential build tools
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -8,33 +11,31 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Install dependencies with proper handling of optional dependencies
-RUN npm ci --include=optional --legacy-peer-deps --no-audit
+# Install ALL dependencies including optional ones (this is key for Rollup)
+RUN npm install --include=optional --legacy-peer-deps
 
 # Copy source code
 COPY . .
 
-# Clean install to ensure proper dependencies
-RUN rm -rf node_modules package-lock.json
-RUN npm install --include=optional --legacy-peer-deps --no-audit
-
 # Build the application
 RUN npm run build
 
-# Production stage
+# Production stage - minimal image
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Copy built application
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
+# Install serve globally
+RUN npm install -g serve
 
-# Install only production dependencies (serve)
-RUN npm ci --only=production --no-audit
+# Copy only the built application
+COPY --from=builder /app/dist ./dist
+
+# Use environment variable for port or default to 3000
+ENV PORT=3000
 
 # Expose port
 EXPOSE $PORT
 
 # Start the application
-CMD ["npm", "start"]
+CMD serve -s dist -l $PORT
