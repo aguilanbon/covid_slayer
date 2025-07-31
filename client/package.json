@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview --host 0.0.0.0",
     "start": "serve -s dist -l $PORT",
-    "serve": "serve -s dist -p 3000",
-    "postinstall": "npm rebuild && echo 'Dependencies rebuilt successfully'"
+    "serve": "serve -s dist -p 3000"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.11",
