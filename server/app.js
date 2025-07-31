@@ -10,6 +10,16 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Health check endpoint for Railway
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ 
+    status: "ok", 
+    message: "COVID Slayer Server is running",
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/api", userRouter);
 app.use("/api", gameRouter);
 
