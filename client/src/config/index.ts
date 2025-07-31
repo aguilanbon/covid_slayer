@@ -1,6 +1,6 @@
 export const config = {
   API_BASE_URL:
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 
   GAME_TIMER_SECONDS: 60,
   ACTION_COOLDOWN_MS: 1000,
